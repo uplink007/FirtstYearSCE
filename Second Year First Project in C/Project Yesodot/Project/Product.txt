@@ -1,0 +1,10 @@
+9
+11 8 4 Masah*13 Dell 1 100 150 3 10 19
+12 8 4 Masah*14 Dell 1 110 160 3 10 9
+13 8 4 Masah*15 Dell 1 130 180 3 10 10
+14 8 4 Masah*16 Dell 1 150 220 3 10 20
+15 8 4 Masah*18 Asus 1 200 230 3 10 20
+16 8 4 Masah*22 Dell 1 500 650 3 10 10
+100 13 7 ScreenSumsung Sumsung 1 600 700 3 20 20
+123 7 14 Mouse2D SergeysCompany 4 100 150 5 20 48
+124 9 6 Gforce600 NVIDIA 2 600 700 3 20 47

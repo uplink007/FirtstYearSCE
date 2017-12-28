@@ -1,0 +1,11 @@
+10
+1 10 TV_Screens
+2 3 GPU
+3 8 keyboard
+4 5 mouse
+5 3 CPU
+6 10 sound_card
+7 11 motherboard
+8 8 hardDisk
+9 8 Consoles
+12 6 Gaming
