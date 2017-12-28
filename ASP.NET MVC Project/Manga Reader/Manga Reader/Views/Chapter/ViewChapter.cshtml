@@ -1,0 +1,17 @@
+﻿@model Manga_Reader.Models.Chapter
+
+
+
+@{
+    ViewBag.Title = "ViewChapter";
+}
+
+<h2>@Model.name</h2>
+
+@{ 
+    for (int i = 1; i < Model.PageNum; i++)
+    {
+        <img src="@Url.Content("~/Manga_DATA/"+Model.Path +"/"+i+".jpg")" />
+    }
+}
+

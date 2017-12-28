@@ -1,0 +1,91 @@
+﻿@model Manga_Reader.Models.Manga
+@using Manga_Reader.Models
+@using Manga_Reader.Controllers
+@{
+    ViewBag.Title = "ViewManga";
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+
+<i>Name</i>: @Model.Name
+<br />
+<i>Author</i>: @Model.Author
+<br />
+<i>Status</i>: @{
+    if (Model.Status)
+    { <i>Completed</i>}
+    else
+    { <i>Ongoing</i>} }
+<br />
+<br />
+<br />
+<br />
+
+
+@Html.ActionLink("Remove Manga", "RemoveManga", "Manga", new { mid = Model.mid }, null)
+
+<br />
+<br />
+
+
+
+<div id="markDiv">
+    <input type="button" id="btnGet" value="Add to bookmarks" />
+</div>
+<script type="text/javascript">
+        $(function () {
+            $("#btnGet").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/User/AddBookmark",
+                    data:'{mid: @Model.mid.ToString()}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $("#btnGet").remove()
+                        $("#markDiv").append(response.Message)
+                    },
+                    failure: function (response) {
+                        $("#btnGet").remove()
+                        $("#markDiv").append("<b> Server Error</b>")
+                    },
+                    error: function (response) {
+                        $("#btnGet").remove()
+                        $("#markDiv").append("<b> You are not logged in!!</b>")
+                    }
+                });
+            });
+        });
+</script>
+
+
+<br />
+
+
+@Html.ActionLink("Add chapter", "AddChapter", "Chapter", new { mid = Model.mid }, null)
+
+
+
+
+<br />
+
+<h3>Chapters</h3>
+
+
+<table border="1">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+        </tr>
+        @{ int i = 0;}
+        @foreach(Chapter c in Model.Chapters)
+        {
+            i++;   
+            <tr>
+                <td>@i</td>
+                <td>@Html.ActionLink(@c.name,"ViewChapter","Chapter",new { MangaID = Model.mid, ChapterID = c.cid },null)</td>
+            </tr>
+        }
+</table>

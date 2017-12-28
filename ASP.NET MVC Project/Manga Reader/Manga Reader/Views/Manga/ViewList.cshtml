@@ -1,0 +1,13 @@
+﻿@model Manga_Reader.Models.VMMangaList
+
+
+
+
+@{
+    WebGrid grid = new WebGrid(Model.MangaList);
+
+    @grid.GetHtml(columns: grid.Columns(
+
+        grid.Column(columnName: "Name", format: (item) => Html.ActionLink(((string)item.Name), "ViewManga", "Manga", new { MangaID = item.mid }, null)))
+    );
+}

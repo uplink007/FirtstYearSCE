@@ -1,0 +1,49 @@
+﻿@model Manga_Reader.Models.Manga
+
+@{
+    ViewBag.Title = "AddManga";
+}
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+@using (Html.BeginForm("SubmitManga", "Manga", FormMethod.Post))
+{
+    <form class="form-horizontal">
+        <fieldset>
+            <legend>Add Manga</legend>
+            <div class="form-group">
+                <label for="inputName" class="col-lg-2 control-label">Name</label>
+                <div class="col-lg-10">
+                    @Html.TextBoxFor(m => m.Name) @Html.ValidationMessageFor(m => m.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAuthor" class="col-lg-2 control-label">Author</label>
+                <div class="col-lg-10">
+                    @Html.TextBoxFor(m => m.Author) @Html.ValidationMessageFor(m => m.Author)
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Status</label>
+                <div class="col-lg-10">
+                    <div class="radio">
+                        @Html.RadioButtonFor(m => m.Status, true, new { id = Html.Id("Completed") })
+                        @Html.Label("Completed","Completed")
+                        <br/>
+                        @Html.RadioButtonFor(m => m.Status, false, new { id = Html.Id("Ongoing") })
+                        @Html.Label("Ongoing", "Ongoing")
+                        <br/>
+                        @Html.ValidationMessageFor(m => m.Status)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-primary">Add Manga</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+}
+

@@ -1,0 +1,73 @@
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\ApplicationInsights.config
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\csc.exe
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\csc.exe.config
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\csc.rsp
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\csi.exe
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\csi.rsp
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\System.AppContext.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\System.Collections.Immutable.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\System.IO.FileSystem.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\System.Reflection.Metadata.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\vbc.exe
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\vbc.exe.config
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\vbc.rsp
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\VBCSCompiler.exe
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\roslyn\VBCSCompiler.exe.config
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Manga Reader.dll.config
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Manga Reader.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Manga Reader.pdb
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Antlr3.Runtime.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\DotNetZip.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\EntityFramework.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\EntityFramework.SqlServer.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.Agent.Intercept.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.DependencyCollector.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.PerfCounterCollector.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.ServerTelemetryChannel.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.Web.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.WindowsServer.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.ApplicationInsights.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Newtonsoft.Json.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.Helpers.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.Mvc.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.Optimization.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.Razor.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.WebPages.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.WebPages.Razor.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\WebGrease.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\DotNetZip.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\EntityFramework.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\EntityFramework.SqlServer.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.DependencyCollector.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.ServerTelemetryChannel.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.Web.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.AI.WindowsServer.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.ApplicationInsights.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.Helpers.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.Mvc.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.Optimization.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.Razor.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.WebPages.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\System.Web.WebPages.Razor.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Antlr3.Runtime.pdb
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\bin\Newtonsoft.Json.xml
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\obj\Debug\Manga Reader.csprojResolveAssemblyReference.cache
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\obj\Debug\Manga Reader.dll
+C:\Users\Timor Satarov\Source\Workspaces\Manga Reader\Manga Reader\Manga Reader\obj\Debug\Manga Reader.pdb

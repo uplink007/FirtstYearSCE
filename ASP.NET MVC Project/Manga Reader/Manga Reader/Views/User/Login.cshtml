@@ -1,0 +1,34 @@
+﻿@model Manga_Reader.Models.User
+@{
+    ViewBag.Title = "Login";
+}
+<div>
+
+    @using (Html.BeginForm("LoginSubmit", "User", FormMethod.Post))
+    {
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Login</legend>
+                <div class="form-group">
+                    <label for="inputUser" class="col-lg-2 control-label">Username</label>
+                    <div class="col-lg-10">
+                        @Html.TextBoxFor(u => u.UserName) 
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                    <div class="col-lg-10">
+                        @Html.PasswordFor(u => u.Password)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                    <i style="color:red">@ViewBag.loginMessage</i>
+                </div>
+            </fieldset>
+        </form>
+    }
+</div>

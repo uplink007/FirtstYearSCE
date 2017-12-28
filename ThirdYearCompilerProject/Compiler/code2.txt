@@ -1,0 +1,41 @@
+procedure foo() return integer
+{
+	var a : integer;
+	a = 23;
+	if (a == 23)
+		a = 10;
+	else
+		a = 19;
+	return a;
+}
+
+
+procedure fee(a, b : integer) return integer
+{
+	var sum1, sum2: integer
+	sum1 = 0;
+	sum2 = 0;
+	while (a < b){
+		if (a / 2 == 0 || a*b < 100)
+			sum1 = sum1 + a;
+		else
+			sum2 = sum2 + 1;
+		a = a + 1;
+	}
+	return   sum1 + sum2;
+}
+
+
+
+procedure Main() return integer
+{
+	var a : integer;
+	var b : integer;
+	a = 0;
+	while(a < 10) {
+		b = foo();
+		a = a + b;
+		a = a + fee(a, b);
+	}
+	return 0;
+}

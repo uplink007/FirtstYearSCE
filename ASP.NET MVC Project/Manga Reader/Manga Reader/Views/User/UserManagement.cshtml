@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "UserManagement";
+}
+<link href="~/Content/UserMeneger.css" rel="stylesheet" />
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<h2>Users Managment Control</h2>
+<div ng-app="userMeneger" ng-controller="userControler">
+
+    <table class="userMeneger">
+        <thead class="userMeneger">
+            <tr>
+                <th>Username</th>
+                <th>Permission</th>
+                <th colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in users" ng-click="promotion">
+                <td ng-bind="user.UserName"><strong></strong></td>
+                <td ng-bind="user.prem"><strong></strong></td>
+                <td><input type="button" class="btn btn-primary" value="Promote" ng-click="PremFunc(user,'+')"/></td>
+                <td><input type="button" class="btn btn-primary" value="Demote"ng-click="PremFunc(user,'-')" /></td>
+            </tr>
+            @*<tr>
+                <td><strong>showEasing</strong></td>
+                <td>'linear'</td>
+                <td><input type="button" class="btn btn-primary" value="Promote" /></td>
+                <td><input type="button" class="btn btn-primary" value="DisPromote" /></td>
+            </tr>*@
+        </tbody>
+    </table>
+    
+</div>
+<script>
+    angular.module('userMeneger',[]).controller('userControler', ['$scope', '$http', function ($scope, $http) {
+        console.log('angularControler');
+        $scope.loadData = function () { $http.post('ManageUsersGetUsers').success(function (users) {
+            for(var i=0; i<users.length;i++){
+                switch (users[i].Permission) {
+                    case 0: users[i].prem = "Guest";
+                        break;
+                    case 1: users[i].prem = "Member";
+                        break;
+                    case 2: users[i].prem = "Uploader";
+                        break;
+                    case 3: users[i].prem = "Admin";
+                        break;
+                    default: users[i].prem = "Unknown Permission";
+
+                }
+            }
+            $scope.users = users;
+        }
+        );
+        };
+        $scope.loadData();
+        $scope.PremFunc = function (user, index) {
+            var targeturl = null;
+            if (index == '+') {
+                targeturl = '@Url.Action("promote", "User")?uidUser=' + user.uid;
+            } else {
+                targeturl = '@Url.Action("demote", "User")?uidUser=' + user.uid;
+
+                //$.ajax({
+                //    type: "GET",
+                //    url: targeturl,
+                //    success: function (users) {
+                //        for (var i = 0; i < users.length; i++) {
+                //            switch (users[i].Permission) {
+                //                case 0: users[i].prem = "Guest";
+                //                    break;
+                //                case 1: users[i].prem = "Member";
+                //                    break;
+                //                case 2: users[i].prem = "Uploader";
+                //                    break;
+                //                case 3: users[i].prem = "Admin";
+                //                    break;
+                //                default: users[i].prem = "Unknown Permission";
+
+                //            }
+                //        }
+                //         $scope.$apply(function (users) { $scope.users = users;});
+                //    }
+                //});
+            }
+            $http({
+                method: "GET",
+                url: targeturl
+            }).then(function mySucces(users) {
+                $scope.loadData();
+            });
+        }
+    }]);
+
+</script>

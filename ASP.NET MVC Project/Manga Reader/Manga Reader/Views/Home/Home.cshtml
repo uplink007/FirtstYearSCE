@@ -1,0 +1,20 @@
+﻿@model Manga_Reader.Models.Manga
+
+@{
+    ViewBag.Title = "Home";
+}
+<div style="text-align:center">
+    <h2 >Random Manga</h2>
+
+    @if (Model != null)
+    {
+        @Html.ActionLink(Model.Name, "ViewManga", "Manga", new { MangaID = Model.mid },null)
+    }
+    else
+    {
+        <p>Sorry, the Manga list is empty...</p>
+    }
+</div>
+
+
+

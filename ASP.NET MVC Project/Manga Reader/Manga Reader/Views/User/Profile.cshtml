@@ -1,0 +1,18 @@
+﻿@model Manga_Reader.Models.VMMangaList
+@using Manga_Reader.Models
+@{
+    ViewBag.Title = "Profile";
+}
+
+
+
+Welcome: @Model.usr.UserName
+<br/>
+Permission: @Model.usr.Permission
+<br/>
+
+
+<h3>Bookmarks</h3>
+
+@Html.Partial("../Manga/ViewList", Model)
+

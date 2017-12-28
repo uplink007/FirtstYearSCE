@@ -1,0 +1,26 @@
+﻿@model Manga_Reader.Models.VMMangaChapter
+
+@{
+    ViewBag.Title = "AddChapter";
+}
+
+<h2>AddChapter</h2>
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+
+@using (Html.BeginForm("CreateChapter", "Chapter", new { mid = Model.Manga.mid },FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="form-group">
+        <label for="inputName" class="col-lg-2 control-label">Chapter Name</label>
+        <div class="col-lg-10">
+            @Html.TextBoxFor(u => u.Chapter.name) @Html.ValidationMessageFor(u => u.Chapter.name)
+        </div>
+    </div>
+    <label for="file">Upload Image:</label>
+    <input type="file" name="file" id="file" /><br><br>
+    <input type="submit" value="Upload Manga" />
+    <br><br>
+}

@@ -1,0 +1,72 @@
+﻿@model Manga_Reader.Models.User
+
+@{
+    ViewBag.Title = "Register";
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script type="text/javascript">
+    function checkUserName(txtUserName) {
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: 'CheckUserNameAvailability',
+                data: '{username: "' + $(txtUserName).val().trim() + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if ($('#spnMsgUser').attr("class") != "field-validation-error") {
+                        if (response.d != "0") {
+                            $("#spnMsgUser").html('Username exist');
+                            @{ Session["userValid"] = "false";}
+                            $("#spnMsgUser").removeClass('field-validation-valid').addClass('field-validation-error');
+                        }
+                        else {
+                            $("#spnMsgUser").html('Available');
+                             @{ Session["userValid"] = "true";}
+                            $("#spnMsgUser").removeClass('field-validation-error').addClass('field-validation-valid');
+                        }
+                    }
+                    else {
+                    }
+
+                }
+            });
+        }
+</script>
+<div>
+
+    @using (Html.BeginForm("RegisterSubmit", "User", FormMethod.Post))
+    {
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Registration</legend>
+                <div class="form-group">
+                    <label for="inputUser" class="col-lg-2 control-label">Username</label>
+                    <div class="col-lg-10">
+                         @Html.TextBoxFor(u => u.UserName, new { @onchange = "checkUserName(this);" }) @Html.ValidationMessageFor(u => u.UserName,"",new { @id="spnMsgUser" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                    <div class="col-lg-10">
+                        @Html.PasswordFor(u => u.Password) @Html.ValidationMessageFor(u => u.Password, "", new { @class = "userloginfailure" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <input type="reset" class="btn btn-primary" value="Reset"/>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    }
+</div>
+
+
+
+

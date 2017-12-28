@@ -1,0 +1,84 @@
+﻿@using Manga_Reader.Models
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Manga Reader</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        .field-validation-valid {
+            background-color: #ffffff;
+            font-size: 12px;
+            color: #338610;
+            padding: 3px 6px 3px 6px;
+        }
+
+        .field-validation-error {
+            background-color: #ffffff;
+            font-size: 12px;
+            color: #ff0000;
+            padding: 3px 6px 3px 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Manga Reader", "Home", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Home", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Manga List", "MangaList", "Manga")</li>
+                    
+
+                </ul>
+                @{
+                    if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        <ul class="nav navbar-nav navbar-right">
+                             <li>@Html.ActionLink("Manage Users", "ManageUsers", "User")</li>
+                             <li>@Html.ActionLink("Add Manga", "addManga", "Manga")</li>
+                            <li>@Html.ActionLink("Profile", "Profile", "User")</li>
+                            <li>@Html.ActionLink("Logout", "Logout", "User")</li>
+                        </ul>
+                    }
+                    else
+                    {
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>@Html.ActionLink("Register", "Register", "User")</li>
+                            <li>@Html.ActionLink("Login", "Login", "User")</li>
+                        </ul>
+
+                    }
+                }
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year -Manga Reader</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
