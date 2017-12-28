@@ -1,0 +1,211 @@
+#!/bin/bash 
+
+set -eo pipefail
+shopt -s extglob;
+
+TEMP=`getopt -n cf-dns -o hc:qg:t:u:v: --long credentials:,help,quiet,get:,type:,update:,value: -- "$@"`
+eval set -- "$TEMP"
+
+quiteFlag=0;
+# getFlag=0 #############################################
+# Extract options
+while true ; do
+    case "$1" in
+    
+    	-h|--help)
+    		echo "
+Manipulate CloudFlare DNS entries.
+
+cf-dns -h
+	Show this synopsis.
+
+cf-dns [-q|--quiet] [-c|--credentials <email>:<apikey>]
+      -g|--get <subdomain> -t|--type <type>
+  Print contents of all matching DNS entries of given type for a domain.
+
+cf-dns [-q|--quiet] [-c|--credentials <email>:<apikey>]
+      -u|--update <subdomain> -t|--type <type>
+  Set or update contents of DNS entry of given type for a domain.
+  This command assumes that there is at most one such entry.
+
+CF_CREDENTIALS environment variable may be used instead of -c|--credentials switch."
+		exit 0;;
+   
+    	-q|--quiet)
+    		quiteFlag=1;
+    		shift;;
+    		
+    	-g|--get)
+    		getFlag=1;
+    		case "$2" in
+    			+([A-Za-z0-9])+(.+([A-Za-z0-9]))) subdomain="$2" ; shift 2;; 
+    			*) echo "cf-dns: subdomain does not look right">&2; exit 1;;
+    		esac;;
+  		
+  		-v|--value)
+ 			value="$2"; shift 2;; 
+  		
+  		-u|--update)
+    		updateFlag=1;
+    		case "$2" in
+    			+([A-Za-z0-9])+(.+([A-Za-z0-9])) ) subdomain="$2"; shift 2;; 
+    			*) echo "cf-dns: subdomain does not look right">&2; exit 1;;
+    		esac;;
+    		
+        -c|--credentials)
+            case "$2" in
+             +([A-Za-z0-9._%+-])@+([A-Za-z0-9.-])+(.+([A-Za-z])):+([A-Fa-f0-9])) CF_CREDENTIALS="$2";shift 2;;
+             +([A-Za-z0-9._%+-])@+([A-Za-z0-9.-])+(.+([A-Za-z])):* ) echo "cf-dns: API key does not look right">&2; exit 1;;
+             +([A-Za-z0-9._%+-])@+([A-Za-z0-9.-])+(.+([A-Za-z]))) echo "cf-dns: credentials do not contain an API component">&2; exit 1;;
+             *) echo "cf-dns: credentials do not contain an email component">&2; exit 1;;     
+       		 esac ;;
+        
+        -t|--type)
+    		type_flag=1;
+			typeVar="$2"; shift 2;; 
+
+		--) shift;
+		if [ ! "$#" -eq 0 ]; then
+			echo "cf-dns: unknown extra arguments">&2; exit 1;
+		fi;
+		break;;
+        
+        *) echo "cf-dns: Internal Error">&2; exit 1;;
+    esac
+done
+
+if [ -z "${getFlag+x}" -a -z "${updateFlag+x}" ]; then # checks if get or update were not specified
+	echo "cf-dns: get or update options were not specified">&2; exit 1
+fi;
+
+if [  "$getFlag" = 1 -a "$updateFlag" = 1 ]; then # checks if get and update were both specified
+	echo "cf-dns: options get and update can not be specified together">&2; exit 1
+fi;
+
+if [ -z "${CF_CREDENTIALS+x}" ]; then # checks if CF_CREDENTIALS variable is empty
+	echo "cf-dns: CloudFlare credentials not specified">&2;
+	exit 1;
+fi;
+
+case "$CF_CREDENTIALS" in
+	+([A-Za-z0-9]?(.))@+([A-Za-z0-9])+(.+([A-Za-z0-9])):+([A-Fa-f0-9])) ;;
+	+([A-Za-z0-9]?(.))@+([A-Za-z0-9])+(.+([A-Za-z0-9])):* ) echo "cf-dns: API key does not look right">&2; exit 1;;
+    +([A-Za-z0-9]?(.))@+([A-Za-z0-9])+(.+([A-Za-z0-9]))) echo "cf-dns: credentials do not contain an API component">&2; exit 1;;
+    *) echo "cf-dns: credentials do not contain an email component">&2; exit 1;;     
+esac
+
+if [ -z "${typeVar+x}" ]; then # checks if type variable is empty
+	echo "cf-dns: DNS enrty type not specified">&2; exit 1;
+fi;
+
+if [ "$updateFlag" = 1 -a -z "${value+x}" ]; then
+	echo "cf-dns: value parameter is needed for updating">&2; exit 1;
+fi;
+
+numofdot=$(echo $subdomain | grep -o "\." | wc -l)
+if [ "$numofdot" -gt 1 ] ; then
+	domain=("${subdomain#*.}")
+else
+	domain="$subdomain"
+fi
+
+email=("${CF_CREDENTIALS%:*}")
+
+cKey=("${CF_CREDENTIALS#*:}")
+
+typeVar=$(echo $typeVar | tr '[:lower:]' '[:upper:]')
+
+
+#########################################################
+
+#email="sharafi30@gmail.com" ; cKey="3106f6c9b217e371016cbccacb98f633544f1" ;subdomain="linuxex3.tk" domain="linuxex3.tk" value="127.0.0.23"
+
+if [ "$quiteFlag" -eq 0 ] ; then
+	failCurl="--fail -S"
+else
+	failCurl=""
+fi
+
+#res status
+if cheakCredStatus=$( curl $failCurl -s -o /dev/null -w "%{http_code}" https://api.cloudflare.com/client/v4/user \
+     -H "X-Auth-Email: ${email}" \
+     -H "X-Auth-Key: ${cKey}") ; then
+errorFlag=0
+fi
+if [ "$cheakCredStatus" -ne 200 ] ;then
+    if [ "$cheakCredStatus" -eq 403 ] ; then
+        echo "cf-dns: could not invoke CloudFlare API (bad email?)" 1>&2
+    fi
+    if [ "$cheakCredStatus" -eq 400 ] ; then
+        echo "cf-dns: could not invoke CloudFlare API (bad credentials?)" 1>&2
+    fi
+exit 1
+fi
+zoneid=$( curl $failCurl -s -X GET "https://api.cloudflare.com/client/v4/zones?name=${domain}&order=status&match=all" \
+     -H "X-Auth-Email: ${email}" \
+     -H "X-Auth-Key: ${cKey}" \
+     -H "Content-Type: application/json" | jq '.result[0].id'  | xargs echo )
+if [ "$zoneid" = "null" ] ; then
+    echo "cf-dns: could not retrieve zone ID, probably wrong domain" 1>&2
+exit 1
+fi
+
+if [ "$getFlag" = 1 ] ;then
+requestrData=$( curl $failCurl -s -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=${typeVar}&name=${subdomain}" \
+     -H "X-Auth-Email: ${email}" \
+     -H "X-Auth-Key: ${cKey}" \
+     -H "Content-Type: application/json" | jq '.result_info.count' )
+ 
+    if [ "$requestrData" -eq 0 ] ; then
+    echo "cf-dns: DNS entry not found" 1>&2
+    exit 1
+    else
+    requestrData=$( curl $failCurl -s -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=${typeVar}&name=${subdomain}" \
+         -H "X-Auth-Email: ${email}" \
+         -H "X-Auth-Key: ${cKey}" \
+         -H "Content-Type: application/json" | jq '.result[].content' | xargs echo )
+    echo $requestrData
+    fi
+else
+	set +e;
+	requestrData=$( curl $failCurl -s -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?name=${subdomain}" \
+     -H "X-Auth-Email: ${email}" \
+     -H "X-Auth-Key: ${cKey}" \
+     -H "Content-Type: application/json" | jq '.result_info.count' )
+ 
+ 
+    if [ "$requestrData" -eq 0 ] ; then
+        #create
+        status=$( curl -X POST $failCurl -s "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records" \
+                 -H "X-Auth-Email: ${email}" \
+                 -H "X-Auth-Key: ${cKey}" \
+                 -H "Content-Type: application/json" \
+                 --data '{"type":'"\"${typeVar}\""',"name":'"\"${subdomain}\""',"content":'"\"${value}\""'}' | jq '.success' )
+                 if [ "$status" = "true" ] ; then  
+                    echo Creating new entry
+                else
+                    echo "cf-dns:Faild to create new entry (bad value? bad type?)" 1>&2
+                    exit 1
+                fi
+    else
+        #update
+        echo "Updating existing entry"
+        requestrData=$( curl $failCurl -s -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?name=${subdomain}" \
+             -H "X-Auth-Email: ${email}" \
+             -H "X-Auth-Key: ${cKey}" \
+             -H "Content-Type: application/json" | jq '.result[].id' | xargs echo )
+        status=$( curl -X PUT $failCurl -s "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records/${requestrData}" \
+             -H "X-Auth-Email: ${email}" \
+             -H "X-Auth-Key: ${cKey}" \
+             -H "Content-Type: application/json" \
+             --data '{"type":'"\"${typeVar}\""',"name":'"\"${subdomain}\""',"content":'"\"${value}\""'}' | jq '.success' )
+       
+
+                if [ "$status" = "true" ] ; then  
+                    echo Update was successful
+                else
+                    echo "cf-dns:Faild to update existing entry (bad value? bad type?)" 1>&2
+                    exit 1
+                fi
+    fi
+fi

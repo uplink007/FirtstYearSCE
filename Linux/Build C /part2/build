@@ -1,0 +1,129 @@
+#!/bin/bash
+set -e;
+
+TEMP=`getopt -n build -o c:l:s --long compiler:,linker:,strip,clean,deps: -- "$@"`
+eval set -- "$TEMP"
+
+strip="";
+clean_flag=0;
+deps_flag=0;
+file_name="";
+# Extract options
+while true ; do
+    case "$1" in
+
+    	-s|--strip)
+    		strip_flag="-s";
+    		shift;;
+
+  		-c|--compiler)
+    		com_flag=1;
+    		case "$2" in
+    			*) compiler_par=$2; shift 2;;
+    		esac;;
+    		
+    	-l|--linker)
+    		lin_flag=1;
+    		case "$2" in
+    			*) linker_par=$2; shift 2;;
+    		esac;;	
+
+		--) shift;
+		if [ ! "$#" -eq 0 ]; then
+			echo "build: unknown extra arguments" >&2; exit 1;
+		fi;
+		break;;
+        --clean)
+		clean_flag=1;
+		shift;;
+		
+	--deps)
+		deps_flag=1;
+		file_name="$2";
+		shift 2;;
+		
+        *) errormsg="build: Internal Error">&2; exit 1 ;;
+    esac
+done
+
+if [ -z "${com_flag+x}" -o -z "${lin_flag+x}" ]; then
+	echo "build: compiler or linker options were not specified" >&2;
+	exit 1;
+fi;
+
+if [ "$clean_flag" -eq 1 ]; then
+	rm -f bin/prog lib/libhelper.so obj/delta.o obj/helper.o obj/main.o;
+	echo "All generated files were deleted";
+	exit 0
+fi;
+
+if [ "$deps_flag" -eq 1 ]; then
+	gcc -MM src/"$file_name";
+	exit 0;
+fi;
+
+# End of getopt
+
+delta_change=0;
+helper_change=0;
+helperso_change=0;
+maino_change=0;
+prog_change=0;
+
+# Checks if delta.o not exists or delta.asm is newer or delta.h is newer
+if [ ! -e obj/delta.o -o src/delta.asm -nt obj/delta.o -o src/delta.h -nt obj/delta.o ]; then
+	delta_change=1;
+fi;
+
+# Checks if helper.o not exists or helper.c is newer or helper.h is newer or delta.o has changed
+if [ ! -e obj/helper.o -o src/helper.c -nt obj/helper.o -o src/helper.h -nt obj/helper.o -o $delta_change -eq 1 ]; then
+	helper_change=1;
+fi;
+
+# Checks if libhelper.so not exists or helper.o is newer or helper.o has changed
+if [ ! -e lib/libhelper.so -o obj/helper.o -nt lib/libhelper.so -o $helper_change -eq 1 ]; then
+	helperso_change=1;
+fi;
+
+# Checks if main.o not exists or main.c is newer or helper is newer
+if [ ! -e obj/main.o -o src/main.c -nt obj/main.o -o $helperso_change -eq 1 ]; then
+	maino_change=1;
+fi;
+
+# Checks if prog not exists or main.c is newer or helper is newer
+if [ ! -e bin/prog -o src/main.c -nt bin/prog -o $helperso_change -eq 1 ]; then
+	prog_change=1;
+fi;
+
+### COMPILE ###
+
+#compiling the delta.asm with NASM
+if [ $delta_change -eq 1 ]; then
+	nasm -felf64 src/delta.asm -o obj/delta.o
+	echo "nasm: creating delta.o";
+fi;
+
+#compiling the helper.c as a shared library
+if [ $helper_change -eq 1 ]; then
+	gcc -c -shared -fpic ${compiler_par} -o obj/helper.o src/helper.c  
+	echo "gcc: creating helper.o";
+fi;
+
+#-lm is used to link the libmath
+if [ $helperso_change -eq 1 ]; then
+	gcc -shared -fpic "${linker_par}" -o lib/libhelper.so obj/helper.o -lm 
+	echo "gcc: creating libhelper.so";
+fi;
+
+#compiling the main.o
+if [ $maino_change -eq 1 ]; then
+	gcc -c -o obj/main.o src/main.c ${compiler_par}
+	echo "gcc: creating main.o";
+fi;
+
+#linking the main prog
+if [ $prog_change -eq 1 ]; then
+	gcc -o bin/prog obj/main.o obj/delta.o -Llib -lhelper ${strip_flag} -Wl,"${linker_par}",-rpath,lib/
+	echo "gcc: creating prog";
+fi;
+

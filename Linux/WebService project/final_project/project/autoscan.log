@@ -1,0 +1,23 @@
+autoscan: warning: missing AC_CHECK_HEADER_STDBOOL wanted by: 
+	src/tic_tac_toe/tic_tac_toe.hpp:28
+	src/tic_tac_toe/tic_tac_toe.cpp:162
+	src/tic_tac_toe/tic_tac_toe.cpp:189
+	src/util/util.hpp:28
+	src/util/util.hpp:31
+	src/util/util.cpp:50
+	src/util/util.cpp:107
+	src/util/util.cpp:154
+	src/tic_tac_toe/tic_tac_toe.cpp:165
+	src/tic_tac_toe/tic_tac_toe.cpp:211
+	src/util/util.cpp:50
+	src/util/util.cpp:161
+	src/tic_tac_toe/tic_tac_toe.cpp:162
+	src/tic_tac_toe/tic_tac_toe.cpp:196
+	src/tic_tac_toe/tic_tac_toe.cpp:200
+	src/tic_tac_toe/tic_tac_toe.cpp:204
+	src/tic_tac_toe/tic_tac_toe.cpp:207
+	src/tic_tac_toe/tic_tac_toe.cpp:209
+	src/util/util.cpp:55
+	src/util/util.cpp:171
+autoscan: warning: missing AC_PROG_RANLIB wanted by: 
+	ltmain.sh:3772

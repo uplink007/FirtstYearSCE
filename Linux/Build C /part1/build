@@ -1,0 +1,94 @@
+#!/bin/bash
+set -e;
+
+TEMP=`getopt -n build -o c:l:s --long compiler:,linker:,strip -- "$@"`
+eval set -- "$TEMP"
+
+strip="";
+
+# Extract options
+while true ; do
+    case "$1" in
+
+    	-s|--strip)
+    		strip_flag="-s";
+    		shift;;
+
+  		-c|--compiler)
+    		com_flag=1;
+    		case "$2" in
+    			*) compiler_par=$2; shift 2;;
+    		esac;;
+    		
+    	-l|--linker)
+    		lin_flag=1;
+    		case "$2" in
+    			*) linker_par=$2; shift 2;;
+    		esac;;	
+
+		--) shift;
+		if [ ! "$#" -eq 0 ]; then
+			echo "build: unknown extra arguments" >&2; exit 1;
+		fi;
+		break;;
+        
+        *) errormsg="build: Internal Error">&2; exit 1 ;;
+    esac
+done
+
+if [ -z "${com_flag+x}" -o -z "${lin_flag+x}" ]; then
+	echo "build: compiler or linker options were not specified" >&2;
+	exit 1;
+fi;
+# End of getopt
+
+
+maino_flag=0;
+helpero_flag=0;
+libhelper_flag=0;
+prog_flag=0;
+
+# Checks if main.o not exists or main.c is newer or helper.h is newer
+if [ ! -e main.o -o main.c -nt main.o -o helper.h -nt main.o ]; then
+	maino_flag=1;
+fi;
+
+# Checks if helper.o not exists or helper.c is newer or helper.h is newer
+if [ ! -e helper.o -o helper.c -nt helper.o -o helper.h -nt helper.o ]; then
+	helpero_flag=1;
+fi;
+
+# Checks if libhelper.a not exists or helpero_flag is true
+if [ ! -e libhelper.a -o $helpero_flag -eq 1 ]; then
+	libhelper_flag=1;
+fi;
+
+# Checks if prog not exists or libhelper_flag is true or maino_flag is true
+if [ ! -e prog -o $libhelper_flag -eq 1 -o $maino_flag -eq 1 ]; then
+	prog_flag=1;
+fi;
+
+
+# Creating helper.o
+if [ $helpero_flag -eq 1 ]; then
+	gcc -c helper.c ${compiler_par};
+	echo "gcc: creating helper.o";
+fi;
+
+# Remove libhelper.a and put helper.o into a new static library
+if [ $libhelper_flag -eq 1 ]; then
+	rm -f libhelper.a;
+	ar r libhelper.a helper.o;
+fi;
+
+# Compiling stage
+if [ $maino_flag -eq 1 ]; then
+	gcc -c -o main.o main.c ${compiler_par};
+	echo "gcc: creating main.o";
+fi;
+
+# Linking stage
+if [ $prog_flag -eq 1 ]; then
+	gcc -o prog main.o -L. -lhelper -lm ${strip_flag} -Wl,"${linker_par}";
+	echo "gcc: creating prog";
+fi;

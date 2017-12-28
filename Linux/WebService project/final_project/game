@@ -1,0 +1,214 @@
+#!/bin/bash 
+
+set -eo pipefail;
+shopt -s extglob;
+
+TEMP=`getopt -n Game -o hcp:sbu: --long help,current,put:,surrender,begin,user: -- "$@"`
+eval set -- "$TEMP"
+
+ip="xigul.tk";
+currentFlag=0;
+putFlag=0;
+userFlag=0;
+surrenderFlag=0;
+beginFlag=0;
+
+while true ; do
+    case "$1" in
+    
+    	-h|--help)
+    		echo "
+This the client side of the game Tic Tac Toe against the computer.
+The IP of the server is: ${ip}
+
+Try and create a row or column of X.
+
+game [-h|--help]
+	Show this synopsis
+
+game [-u|--user username] [-c|--current]
+	Show game and board status of the username
+
+game [-u|--user username] [-p|--put number]
+	Place X where number is the index on the board.
+	number is between 0 to 8. 
+	
+	See below the location on the board:
+	
+	0|1|2
+	3|4|5
+	6|7|8
+	
+game [-u|--user username] [-s|--surrender]
+	Stop the game and surrender which cause the game to end.
+
+game [-u|--user username] [-b|--begin]
+	Send a requset to the sever to start the game with the username provided.";
+		exit 0;;
+
+    	-c|--current)
+    		if [ $putFlag -eq 1 -o $surrenderFlag -eq 1 -o $beginFlag -eq 1 ]; then
+				echo "Game: parameters misuse">&2;
+				exit 1;
+			fi;
+    		currentFlag=1;
+    		shift;;
+    		
+    	-p|--put)
+    		if [ $currentFlag -eq 1 -o $surrenderFlag -eq 1 -o $beginFlag -eq 1 ]; then
+				echo "Game: parameters misuse">&2;
+				exit 1;
+			fi;
+    		putFlag=1;
+    		move="$2"; 
+    		shift 2;; 
+  		
+  		-u|--user)
+    		userFlag=1;
+			user="$2";
+			shift 2;; 
+
+  		-s|--surrender)
+  			if [ $currentFlag -eq 1 -o $putFlag -eq 1 -o $beginFlag -eq 1 ]; then
+				echo "Game: parameters misuse">&2;
+				exit 1;
+			fi;
+ 			surrenderFlag=1;
+ 			shift ;;
+  		
+  		-b|--begin)
+  			if [ $currentFlag -eq 1 -o $putFlag -eq 1 -o $surrenderFlag -eq 1 ]; then
+				echo "Game: parameters misuse">&2;
+				exit 1;
+			fi;
+    		beginFlag=1;
+    		shift ;;
+    		
+		--) shift;
+		if [ ! "$#" -eq 0 ]; then
+			echo "Game: unknown extra arguments">&2; exit 1;
+		fi;
+		break;;
+        
+        *) echo "Game: Internal Error">&2; exit 1;;
+    esac
+done
+
+################# HERE CHECK FOR ERRORS #################
+
+if [ $userFlag -eq 0 ]; then
+	echo "Game: username missing">&2;
+	exit 1;
+fi;
+
+#######################################################
+
+################# FUNCTIONS DEFINITIONS #################
+function checkErrors {
+	if [ $1 = "error" ]; then
+		msg=$( echo $2 | jq '.message'  | xargs echo )
+		echo "$msg">&2;
+		exit 1;
+	fi;
+}
+
+function checkWin {
+	if [ $1 = "won" ]; then
+		echo;echo "----- You Have Won The World's Championship! -----";
+	fi;
+	
+	if [ $1 = "lost" ]; then
+		echo;echo "----- You Lost You Noob! -----";
+	fi;
+	
+	if [ $1 = "draw" ]; then
+		echo;echo "----- Oh No It's a Draw! Pitty.. -----";
+	fi;
+}
+
+function print_XO {
+	if [ $1 -eq 0 ]; then
+		echo -n " "
+	elif [ $1 -eq 1 ]; then
+		echo -n 'X'
+	else
+		echo -n 'O'
+	fi
+}
+
+function print_row {
+	echo -ne "\t "
+	print_XO "${board[$1]}"
+	echo -n " | "
+	print_XO "${board[$1 + 1]}"
+	echo -n " | "
+	print_XO "${board[$1+ 2]}"
+	echo
+}
+
+function current {
+	tmp=$(curl -s -X GET  "https://${ip}/${user}/current")
+	state=$( echo $tmp | jq '.state'  | xargs echo )
+	checkErrors "$state" "$tmp";
+	checkWin "$state";
+	name=$( echo $tmp | jq '.name'  | xargs echo )
+	for i in {0..8}; do
+		board[$i]=$( echo $tmp | jq '.board['$i']'  | xargs echo )
+	done;
+	echo "___________________________________"
+	echo -e "${name} is X \t computer is O \n"
+	for i in {0..2}; do
+		print_row $(( $i * 3 ))
+		if [ $i -ne 2 ]; then
+		echo -e "\t------------"
+		fi
+	done;
+	echo "___________________________________"
+}
+
+function put {
+	tmp=$(curl -s -X GET  "https://${ip}/${user}/move/${move}")
+	state=$( echo $tmp | jq '.state'  | xargs echo )
+	checkErrors "$state" "$tmp";	
+}
+
+function surrender {
+	tmp=$(curl -s -X GET  "https://${ip}/${user}/surrender")
+	state=$( echo $tmp | jq '.state'  | xargs echo )
+	checkErrors "$state" "$tmp";	
+}
+
+function begin {
+	tmp=$(curl -s -X GET  "https://${ip}/${user}/start")
+	state=$( echo $tmp | jq '.state'  | xargs echo )
+	checkErrors "$state" "$tmp";	
+}
+
+###########################################################
+
+################# COMMANDS SENT TO SERVER #################
+if [ $currentFlag -eq 1 ]; then
+	current;
+	exit 0;
+fi;
+
+if [ $putFlag -eq 1 ]; then
+	put;
+	current;
+	exit 0;
+fi;
+
+if [ $surrenderFlag -eq 1 ]; then
+	surrender;
+	echo "Shame on you! Are you a French??";
+	exit 0;
+fi;
+
+
+if [ $beginFlag -eq 1 ]; then
+	begin;
+	echo;echo "----- Welcome to Tic Tac Toe -----";
+	current;
+	exit 0;
+fi;
+###########################################################

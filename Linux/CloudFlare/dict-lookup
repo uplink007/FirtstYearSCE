@@ -1,0 +1,86 @@
+#!/bin/bash
+#dict-lookup - task3
+set -e
+help_flag=0
+quiet_flag=0
+
+# read the options
+TEMP=`getopt -s bash -n 'dict-lookup' -o hqd:w:  --long help,quiet,dictionary:,word: -- "$@"`
+eval set -- "$TEMP"
+
+while true ; do
+    case "$1" in
+        -h|--help)          help_flag=1 ; shift ;;
+        -q|--quiet)         quiet_flag=1 ; shift ;;
+        -d|--dictionary)    dict="$2" ; shift 2 ;;
+        -w|--word)          word="$2" ; shift 2 ;;
+        --)                 shift ; break ;;
+        *)                  error="Error:Internal Error" ; break ;; #this error should never happen
+    esac
+done
+if [ ! "$#" -eq 0 ];then
+    error="Error:Too many arguments"
+fi
+
+synposis="SYNOPSIS
+Usage:
+    dict-lookup [options...]
+
+Options:
+    -q, --quiet                 Disable error reporting by the script
+    -h, --help                  Output a small usage guide and exit succesfully
+    -d, --dictionary <DICT>     The dictionary that will be used.
+                                if not specified, the env var DICTIONARY will be used.
+    -w, --word <WORD>           The word to search a definition for
+
+DESCRIPTION
+    dict-lookup gets 2 parameters - a DICT and a WORD, and prints the translation of the word in the dictionary (the file).
+    if no file is given the dictionary path is taken from DICTIONARY environment variable.
+    DICT  is the dictionary file.
+    -w|--word will appear before the word you search.
+    WORD is the word to be search in the dictionary."
+
+
+#checking if there might be more errors
+if [ -z "$dict" ]; then
+    dict="$DICTIONARY"
+    if [ -z "$dict" ]; then
+        error="Error:Dictionary not specified and not found in env var DICTIONARY"
+    elif [ ! -e "$dict" ]; then
+        error="Error:Dictionary does not exist"
+    fi
+elif [ ! -e "$dict" ]; then
+    error="Error:Dictionary does not exist"
+fi
+
+if [ -z "$word" ]; then
+    error="Error:A word argument is mandatory"
+fi
+
+
+
+#handling the program
+if [ $help_flag -eq 1 ]; then
+    echo "$synposis"
+    exit 0
+elif [ ! -z "$error" ]; then
+        if [ $quiet_flag -eq 0 ]; then #checkinf if we need to print the error
+            echo "$error" 1>&2
+        fi
+        exit 1
+else #we didnt find any errors, we are ready to lookup words and their translation
+    if cat -- "$dict" | grep  -- "^${word}:" 1>/dev/null ; then
+        if [ $quiet_flag -eq 1 ]; then
+            cat -- "$dict" | grep  -- "^${word}:" | cut -d':' -f 2 2>/dev/null
+        else
+            cat -- "$dict" | grep  -- "^${word}:" | cut -d':' -f 2
+        exit 0
+        fi
+    else
+        if [ ! $quiet_flag -eq 1 ]; then
+            echo "No Matches" 1>&2
+        fi
+        exit 1
+    fi
+fi
+

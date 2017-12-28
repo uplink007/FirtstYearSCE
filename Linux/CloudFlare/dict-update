@@ -1,0 +1,94 @@
+#!/bin/bash
+#dict-update - task3
+set -e
+help_flag=0
+quiet_flag=0
+
+TEMP=`getopt -s bash -n 'dict-update' -o hqd:w:t: --long help,quiet,dictionary:,word:,translation: -- "$@"`
+eval set -- "$TEMP"
+
+while true ; do
+    case "$1" in
+        -h|--help)          help_flag=1 ; shift ;;
+        -q|--quiet)         quiet_flag=1 ; shift ;;
+        -d|--dictionary)    dict="$2" ; shift 2 ;;
+        -w|--word)          word="$2" ; shift 2 ;;
+        -t|--translation)   tran="$2" ; shift 2 ;;
+        --)                 shift ; break ;;
+        *)                  error="Error:Internal Error" ; break ;; #this error should never happen
+    esac
+done
+
+if [ ! "$#" -eq 0 ]; then
+    error="Error:Too many arguments"
+fi
+
+
+
+synposis="SYNOPSIS
+Usage:
+    dict-update [options...]
+
+Options:
+    -q, --quiet                 Disable error reporting by the script
+    -h, --help                  Output a small usage guide and exit succesfully
+    -d, --dictionary <DICT>     The dictionary that will be used.
+    -w, --word <WORD>           The word to search a definition for
+    -t, --translation <TRAN>    The updated translation
+
+DESCRIPTION
+    dict-update gets 3 parameters - DICT, a WORD and a TRAN, and adds or updates the relevant line in the dictionary (the file).
+    if no DICT is given the dictionary path is taken from DICTIONARY environment variable.
+    DICT is the dictionary file.
+    WORD is the word in the dictionary.
+    TRAN is the translation of the word that will be added/updated to the dictionary."
+
+
+
+#checking if there might be more errors
+if [ -z "$dict" ]; then
+    dict="$DICTIONARY"
+    if [ -z "$dict" ]; then
+        error="Error:Dictionary not specified and not found in env var DICTIONARY"
+    elif [ ! -e "$dict" ]; then
+        error="Error:Dictionary does not exist"
+    fi
+elif [ ! -e "$dict" ]; then
+    error="Error:Dictionary does not exist"
+fi
+
+if [ -z "$word" ]; then
+    error="Error:Word is not specified"
+fi
+if [ -z "$tran" ]; then
+    error="Error:Translation is not specified"
+fi
+
+if [ $help_flag -eq 1 ]; then
+    echo "$synposis"
+    exit 0
+elif [ ! -z "$error" ]; then #if there is an error
+    if [ $quiet_flag -eq 0 ]; then #if -q switch wasnt selected we print the error
+        echo "$error" 1>&2
+    fi
+    exit 1
+else #everything went ok, we are ready to add/update the translation of a given word
+    #searching for the given word, if we find it, we replace the translation
+    # else we insert a new entry to the $dict
+    if [  -s $dict ]; then #checks if the dictionary is not empty
+        sed -i  "/^${word}:/{h;s/:.*/:${tran}/};\${x;/^\$/{s//${word}:${tran}/;H};x}"  -- "$dict"
+    else #if the dictionary is empty we will just add the entry to the dict
+        echo  "${word}:${tran}" > $dict
+    fi
+fi
+
+#echo "DEBUG"
+#echo "Word: $word"
+#echo "Dictionary: $dict"
+#echo "Translation: $tran"
+
+exit 0
+
+
+
+
